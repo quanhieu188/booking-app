@@ -5,9 +5,60 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  slug         String   @unique // dùng cho link công khai: /<slug>
+  timezone     String   @default("Asia/Ho_Chi_Minh") // IANA timezone
+  slotMinutes  Int      @default(30) // độ dài mỗi buổi meeting
+  createdAt    DateTime @default(now())
+
+  availabilities Availability[]
+  bookings       Booking[]
+}
+
+// Khung giờ rảnh theo tuần của host.
+// weekday: 1 = Thứ Hai ... 7 = Chủ Nhật (khớp với Luxon).
+// startMin / endMin: số phút tính từ 00:00 (540 = 09:00, 1020 = 17:00).
+model Availability {
+  id       String @id @default(cuid())
+  userId   String
+  weekday  Int
+  startMin Int
+  endMin   Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, weekday])
+}
+
+// startAt / endAt luôn lưu theo UTC.
+model Booking {
+  id          String        @id @default(cuid())
+  hostId      String
+  guestName   String
+  guestEmail  String
+  startAt     DateTime
+  endAt       DateTime
+  status      BookingStatus @default(CONFIRMED)
+  cancelToken String        @unique @default(cuid())
+  createdAt   DateTime      @default(now())
+
+  host User @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@index([hostId, startAt])
 }
