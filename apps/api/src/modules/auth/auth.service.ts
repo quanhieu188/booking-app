@@ -71,3 +71,9 @@ export async function login(input: LoginInput): Promise<PublicUser> {
  if(!user || !ok) throw new HttpError(401, "Invalid email or password");
  return toPublicUser(user);
 };
+
+export async function getUserById(id: string): Promise<PublicUser> {
+    const user = await prisma.user.findUnique({ where: { id }});
+    if(!user) throw new HttpError(401, "Not authenticated!");
+    return toPublicUser(user);
+}
