@@ -6,7 +6,8 @@
     "build": "pnpm -r build",
     "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "pnpm -r --if-present test"
   },
   "devEngines": {
     "packageManager": {

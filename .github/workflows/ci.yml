@@ -20,4 +20,5 @@ jobs:
           DATABASE_URL: postgresql://booking:booking@localhost:5432/booking_app
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm test
       - run: pnpm build
