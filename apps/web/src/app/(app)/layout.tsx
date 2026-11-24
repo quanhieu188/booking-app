@@ -50,6 +50,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             <Link href="/dashboard" className="font-semibold">
               Booking App
             </Link>
+            <Link href="/availability" className="text-gray-600 hover:text-gray-900">
+              Availability
+            </Link>
           </nav>
           <div className="flex items-center gap-3 text-sm">
             <span className="text-gray-600">{user?.name}</span>
@@ -66,4 +69,4 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <main className="mx-auto max-w-4xl p-4">{children}</main>
     </div>
   );
-};
+}
