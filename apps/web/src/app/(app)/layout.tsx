@@ -53,6 +53,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             <Link href="/availability" className="text-gray-600 hover:text-gray-900">
               Availability
             </Link>
+            <Link href="/settings" className="text-gray-600 hover:text-gray-900">
+              Settings
+            </Link>
           </nav>
           <div className="flex items-center gap-3 text-sm">
             <span className="text-gray-600">{user?.name}</span>

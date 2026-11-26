@@ -5,24 +5,12 @@ import { env } from "../../config/env.js";
 import { HttpError } from "../../lib/http-error.js";
 import { prisma } from "../../lib/prisma.js";
 import type { LoginInput, RegisterInput } from "./auth.schemas.js";
+import { PublicUser, toPublicUser } from "../../lib/public-user.js";
+import { isUniqueViolation } from "../../lib/prisma-errors.js";
 
 const BCRYPT_COST = 12;
 // Dùng khi email không tồn tại, để thời gian phản hồi không lộ email nào có trong hệ thống.
 const DUMMY_HASH = bcrypt.hashSync("dummy-password", BCRYPT_COST);
-
-type PublicUser = {
-  id: string;
-  email: string;
-  name: string;
-  slug: string;
-  timezone: string;
-  slotMinutes: number;
-};
-
-function toPublicUser(user: PublicUser): PublicUser {
-  const { id, email, name, slug, timezone, slotMinutes } = user;
-  return { id, email, name, slug, timezone, slotMinutes };
-};
 
 function slugify(name: string): string {
     const base = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -30,11 +18,7 @@ function slugify(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-    return base || "user"
-};
-
-function isUniqueViolation(e: unknown): boolean {
-    return typeof e ==="object" && e!== null && "code" in e && e.code === "P2002";
+    return base.slice(0, 20).replace(/-+$/, "") || "user";
 };
 
 export function signToken(userId: string): string {

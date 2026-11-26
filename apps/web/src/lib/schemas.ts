@@ -16,5 +16,18 @@ export const registerSchema = z.object({
     .max(72, "Password must be at most 72 characters"),
 });
 
+export const settingsSchema = z.object({
+  timezone: z.string().min(1, "Choose a time zone"),
+  slotMinutes: z.number(),
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3, "Use at least 3 characters")
+    .max(30, "Use at most 30 characters")
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens only"),
+});
+
 export type LoginForm = z.infer<typeof loginSchema>;
 export type RegisterForm = z.infer<typeof registerSchema>;
+export type SettingsForm = z.infer<typeof settingsSchema>;
